@@ -53,5 +53,12 @@ def write_to_output_file(client_info: str, set_ordered: str,
         return False, 'Other un-handled errors occurred'
 
 
-def load_output_file(file_path=OUTPUT_FILE_NAME, sheet_name=OUTPUT_SHEET_NAME):
-    pass
+def load_output_file(file_path=OUTPUT_FILE_NAME,
+                     sheet_name=OUTPUT_SHEET_NAME) -> tuple:
+    file_creator = create_output_file()
+    if file_creator:
+        output_workbook = openpyxl.load_workbook(file_path)
+        output_worksheet = output_workbook[sheet_name]
+        return True, output_workbook, output_worksheet
+    else:
+        return False, False, False
