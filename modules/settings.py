@@ -26,3 +26,5 @@ COLUMN_6_TITLE = "Qtà Totale"
 COLUMNS_LIST = [COLUMN_1_TITLE, COLUMN_2_TITLE,
                 COLUMN_3_TITLE, COLUMN_4_TITLE,
                 COLUMN_5_TITLE, COLUMN_6_TITLE]
+
+LOG_FILE_NAME = 'stnd_sets_log.log'
