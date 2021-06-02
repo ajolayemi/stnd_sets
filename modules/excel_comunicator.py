@@ -69,3 +69,11 @@ def load_worksheet_by_index(excel_file_path, sheet_index):
     sheet_names = workbook.sheetnames
     return workbook[sheet_names[sheet_index]]
 
+
+def get_info(worksheet, row_index, col_index):
+    return worksheet.cell(row=row_index,
+                          column=col_index).value
+
+
+if __name__ == '__main__':
+    pass
