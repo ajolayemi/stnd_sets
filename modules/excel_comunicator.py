@@ -62,3 +62,10 @@ def load_output_file(file_path=OUTPUT_FILE_NAME,
         return True, output_workbook, output_worksheet
     else:
         return False, False, False
+
+
+def load_worksheet_by_index(excel_file_path, sheet_index):
+    workbook = openpyxl.load_workbook(excel_file_path)
+    sheet_names = workbook.sheetnames
+    return workbook[sheet_names[sheet_index]]
+
