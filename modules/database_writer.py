@@ -22,6 +22,9 @@ class DatabaseWriter:
 
         self.con_error = False
 
+    def _get_con_name(self):
+        return self.writer_connection.connectionName()
+
     def _get_db_name(self):
         return self.writer_connection.databaseName()
 
