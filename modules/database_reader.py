@@ -27,6 +27,23 @@ class DatabaseReader:
 
         self._create_con()
 
+    def get_set_name(self, set_id):
+        """ Retrieves the name of a given set_id"""
+        name_query = QSqlQuery(self.reader_connection)
+        query = f'SELECT SetName FROM {self.table_name} ' \
+                f'WHERE SetId = {set_id}'
+
+        if name_query.prepare(query):
+            name_query.exec(query)
+            set_name_index = name_query.record().indexOf("SetName")
+            name_query.first()
+            set_name = name_query.value(set_name_index)
+            name_query.finish()
+            return set_name, True
+        else:
+            name_query.finish()
+            return None, False
+
     @staticmethod
     def _get_active_cons():
         return QSqlDatabase.connectionNames()
