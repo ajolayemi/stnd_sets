@@ -54,15 +54,15 @@ class DatabaseWriter:
             insert_data_query.exec()
             if insert_data_query.isActive():
                 msg_to_log = f'Data insertion into {self.table_name} in ' \
-                             f'{self.db_name} was successful.'
+                             f'{self.db_name} was successful.\n'
                 self.logger_cls.log_info_msg(msg_to_log)
             else:
                 msg_to_log = f'Data insertion into {self.table_name} in ' \
-                             f'{self.db_name} was not successful.'
+                             f'{self.db_name} was not successful.\n'
                 self.logger_cls.log_error_msg(msg_to_log)
         else:
             msg_to_log = f'Error while trying to prepare data to be inserted into {self.table_name}' \
-                         f' in {self.db_name}'
+                         f' in {self.db_name}\n'
             self.logger_cls.log_error_msg(msg_to_log)
 
     def create_table(self):
@@ -81,11 +81,11 @@ class DatabaseWriter:
         table_query_cls.exec_(query)
         if table_query_cls.isActive():
             msg_to_log = f'{self.table_name} table was created successfully in ' \
-                         f'{self._get_db_name()}'
+                         f'{self._get_db_name()}\n'
             self.logger_cls.log_info_msg(msg_to_log)
         else:
             msg_to_log = f'There was an error while trying to create {self.table_name} table in ' \
-                         f'{self._get_db_name()}'
+                         f'{self._get_db_name()}\n'
             self.logger_cls.log_error_msg(msg_to_log)
 
     def _get_con_name(self):
@@ -104,11 +104,11 @@ class DatabaseWriter:
             self.con_error = True
             msg_to_log = f'There was an error while trying to ' \
                          f'connect to database with writer connection name \n' \
-                         f'{self.con_name}'
+                         f'{self.con_name}\n'
             self.logger_cls.log_error_msg(msg_to_log)
         else:
             msg_to_log = f'Writer connection - {self.con_name} - in DatabaseReader class created' \
-                         f' successfully. '
+                         f' successfully.\n'
             self.logger_cls.log_info_msg(msg=msg_to_log)
 
 
