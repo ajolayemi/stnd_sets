@@ -4,6 +4,8 @@
 
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 
+from collections import namedtuple
+
 # Self defined modules
 from settings import (DATABASE_NAME, TABLE_NAME,
                       READER_CON_NAME, DATABASE_DRIVER,
@@ -27,22 +29,39 @@ class DatabaseReader:
 
         self._create_con()
 
-    def get_set_components(self, set_id: int):
-        """ Returns a list of all components that make up a set. """
-        components = []
+    def get_set_components_det(self, set_id: int):
+        """ Returns a dict where the keys are the components
+        of a set and values are a named tuple containing component id,
+        component_qta, component_net_qta. """
+        components_det = {}
+        DetTuple = namedtuple('DetTuple',
+                              ['component_id', 'component_qta',
+                               'component_netto_qta'])
         components_query = QSqlQuery(self.reader_connection)
-        query = f'SELECT SetComponent FROM {self.table_name} WHERE ' \
+        query = f'SELECT SetComponent, ComponentID, ComponentQta,' \
+                f'ComponentQtaNetto FROM {self.table_name} WHERE ' \
                 f'SetId = {set_id}'
         if components_query.prepare(query):
             components_query.exec()
             while components_query.next():
-                component_index = components_query.record().indexOf('SetComponent')
-                components.append(components_query.value(component_index))
+                component = components_query.value(
+                    components_query.record().indexOf('SetComponent'))
+                component_id = components_query.value(
+                    components_query.record().indexOf('ComponentID')
+                )
+                component_qta = components_query.value(
+                    components_query.record().indexOf('ComponentQta'))
+                component_netto_qta = components_query.value(
+                    components_query.record().indexOf('ComponentQtaNetto'))
+                components_det[component] = DetTuple(component_id, component_qta,
+                                                     component_netto_qta)
             components_query.finish()
-            return components
+            return components_det
         else:
             components_query.finish()
-            return []
+            msg_to_log = f'Attempt to retrieve set components of ID: {set_id} failed'
+            self.logger_cls.log_error_msg(msg_to_log)
+            return {}
 
     def get_set_name(self, set_id):
         """ Retrieves the name of a given set_id"""
@@ -90,4 +109,4 @@ class DatabaseReader:
 
 if __name__ == '__main__':
     t = DatabaseReader()
-    print(t.get_set_components(1))
+    print(t.get_set_components_det(1))
