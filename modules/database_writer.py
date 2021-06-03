@@ -60,6 +60,10 @@ class DatabaseWriter:
                 msg_to_log = f'Data insertion into {self.table_name} in ' \
                              f'{self.db_name} was not successful.'
                 self.logger_cls.log_error_msg(msg_to_log)
+        else:
+            msg_to_log = f'Error while trying to prepare data to be inserted into {self.table_name}' \
+                         f' in {self.db_name}'
+            self.logger_cls.log_error_msg(msg_to_log)
 
     def create_table(self):
         table_query_cls = QSqlQuery(self.writer_connection)
