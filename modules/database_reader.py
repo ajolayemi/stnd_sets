@@ -29,6 +29,14 @@ class DatabaseReader:
 
         self._create_con()
 
+    def check_table(self):
+        """ Checks to see if table is empty, returns True if it is empty
+        False otherwise. """
+        check_query = QSqlQuery(self.reader_connection)
+        query = f'SELECT * FROM {self.table_name}'
+        check_query.exec(query)
+        return not check_query.first()
+
     def get_set_components_det(self, set_id: int):
         """ Returns a dict where the keys are the components
         of a set and values are a named tuple containing component id,
@@ -109,4 +117,4 @@ class DatabaseReader:
 
 if __name__ == '__main__':
     t = DatabaseReader()
-    print(t.get_set_components_det(1))
+    print(t.check_table())
