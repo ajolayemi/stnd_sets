@@ -29,13 +29,28 @@ class DatabaseReader:
 
         self._create_con()
 
+    def drop_table(self):
+        delete_query = QSqlQuery(self.reader_connection)
+        delete_query.exec(f'DROP TABLE {self.table_name}')
+        if delete_query.isActive():
+            msg_to_log = f'{self.table_name} table in {self.db_name} was' \
+                         f' successfully deleted.'
+            self.logger_cls.log_info_msg(msg_to_log)
+
+        else:
+            msg_to_log = f'Attempt to delete {self.table_name} table in ' \
+                         f'{self.db_name} failed.'
+            self.logger_cls.log_error_msg(msg_to_log)
+
     def check_table(self):
         """ Checks to see if table is empty, returns True if it is empty
         False otherwise. """
         check_query = QSqlQuery(self.reader_connection)
         query = f'SELECT * FROM {self.table_name}'
         check_query.exec(query)
-        return not check_query.first()
+        empty_table = check_query.first()
+        check_query.finish()
+        return not empty_table
 
     def get_set_components_det(self, set_id: int):
         """ Returns a dict where the keys are the components
@@ -106,15 +121,14 @@ class DatabaseReader:
         if not self.reader_connection.open():
             msg_to_log = f'There was an error while trying to ' \
                          f'connect to database with reader connection name \n' \
-                         f'{self.con_name}\n\n'
+                         f'{self.con_name}.'
             self.logger_cls.log_error_msg(msg_to_log)
             self.con_error = True
         else:
             msg_to_log = f'Reader connection - {self.con_name} - in DatabaseReader class created' \
-                         f' successfully.\n\n'
+                         f' successfully.'
             self.logger_cls.log_info_msg(msg=msg_to_log)
 
 
 if __name__ == '__main__':
-    t = DatabaseReader()
-    print(t.check_table())
+    pass
