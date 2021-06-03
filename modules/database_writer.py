@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-""" Reads data from database. """
+""" Writes data into database. """
 
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 from settings import (DATABASE_NAME, TABLE_NAME,
