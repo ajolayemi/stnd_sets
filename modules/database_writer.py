@@ -31,7 +31,35 @@ class DatabaseWriter:
                        set_component: str, component_qta: int,
                        component_netto_qta: int, component_id: int,
                        set_code: str):
-        pass
+        insert_data_query = QSqlQuery(self.writer_connection)
+        query = (
+            f""" INSERT INTO {self.table_name} (
+            SetId,
+            SetName,
+            SetComponent,
+            ComponentQta,
+            ComponentQtaNetto,
+            ComponentID,
+            SetCode)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """)
+        if insert_data_query.prepare(query):
+            insert_data_query.addBindValue(set_id)
+            insert_data_query.addBindValue(set_name)
+            insert_data_query.addBindValue(set_component)
+            insert_data_query.addBindValue(component_qta)
+            insert_data_query.addBindValue(component_netto_qta)
+            insert_data_query.addBindValue(component_id)
+            insert_data_query.addBindValue(set_code)
+            insert_data_query.exec()
+            if insert_data_query.isActive():
+                msg_to_log = f'Data insertion into {self.table_name} in ' \
+                             f'{self.db_name} was successful.'
+                self.logger_cls.log_info_msg(msg_to_log)
+            else:
+                msg_to_log = f'Data insertion into {self.table_name} in ' \
+                             f'{self.db_name} was not successful.'
+                self.logger_cls.log_error_msg(msg_to_log)
 
     def create_table(self):
         table_query_cls = QSqlQuery(self.writer_connection)
@@ -48,11 +76,11 @@ class DatabaseWriter:
         )
         table_query_cls.exec_(query)
         if table_query_cls.isActive():
-            msg_to_log = f'{self.table_name} table was created successfully in \n' \
+            msg_to_log = f'{self.table_name} table was created successfully in ' \
                          f'{self._get_db_name()}'
             self.logger_cls.log_info_msg(msg_to_log)
         else:
-            msg_to_log = f'There was an error while trying to create {self.table_name} table in \n' \
+            msg_to_log = f'There was an error while trying to create {self.table_name} table in ' \
                          f'{self._get_db_name()}'
             self.logger_cls.log_error_msg(msg_to_log)
 
