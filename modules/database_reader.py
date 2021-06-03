@@ -27,6 +27,16 @@ class DatabaseReader:
 
         self._create_con()
 
+    @staticmethod
+    def _get_active_cons():
+        return QSqlDatabase.connectionNames()
+
+    def _get_tables_in_db(self):
+        return self.reader_connection.tables()
+
+    def _get_con_name(self):
+        return self.reader_connection.connectionName()
+
     def _create_con(self):
         self.reader_connection = QSqlDatabase.addDatabase(
             self.db_driver, connectionName=self.con_name
