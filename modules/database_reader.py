@@ -27,6 +27,21 @@ class DatabaseReader:
 
         self._create_con()
 
+    def get_set_components(self, set_id: int):
+        """ Returns a list of all components that make up a set. """
+        components = []
+        components_query = QSqlQuery(self.reader_connection)
+        query = f'SELECT SetComponent FROM {self.table_name} WHERE ' \
+                f'SetId = {set_id}'
+        if components_query.prepare(query):
+            components_query.exec()
+            while components_query.next():
+                component_index = components_query.record().indexOf('SetComponent')
+                components.append(components_query.value(component_index))
+            return components
+        else:
+            return []
+
     def get_set_name(self, set_id):
         """ Retrieves the name of a given set_id"""
         name_query = QSqlQuery(self.reader_connection)
@@ -73,3 +88,4 @@ class DatabaseReader:
 
 if __name__ == '__main__':
     t = DatabaseReader()
+    print(t.get_set_components(1))
