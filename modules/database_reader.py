@@ -38,8 +38,10 @@ class DatabaseReader:
             while components_query.next():
                 component_index = components_query.record().indexOf('SetComponent')
                 components.append(components_query.value(component_index))
+            components_query.finish()
             return components
         else:
+            components_query.finish()
             return []
 
     def get_set_name(self, set_id):
