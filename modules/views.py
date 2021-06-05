@@ -13,7 +13,7 @@ from PyQt5.QtCore import QThread
 import settings
 from helper_modules import helper_functions, logger
 from database_reader import DatabaseReader
-from worker_threads import SetUploader
+from worker_threads import SetUploader, ManualGenerator
 
 MSG_BOX_FONTS = QFont('Italics', 13)
 
@@ -47,7 +47,38 @@ class UiWindow(QMainWindow):
         self.generateManualButton.clicked.connect(self._genManual)
 
     def _manualGenThread(self, file_path, row_num):
-        pass
+        self._manualThread = QThread()
+        self._manualGenCls = ManualGenerator(
+            manual_file_path=file_path, row_num=row_num
+        )
+
+        # Move it to a new thread
+        self._manualGenCls.moveToThread(self._manualThread)
+
+        # Connect the thread start
+        self._manualThread.started.connect(self._manualGenCls.manualGenerator)
+
+        # Update states
+        self._manualGenCls.progress.connect(self.progressBar.setValue)
+        self._manualGenCls.progress.connect(self._updateStateWhileBusy)
+
+        self._manualGenCls.finished.connect(self._setInitialState)
+        self._manualGenCls.unfinished.connect(self._setInitialState)
+        self._manualGenCls.missingProduct.connect(self._setInitialState)
+
+        # Clean up
+        self._manualGenCls.finished.connect(self._manualThread.quit)
+        self._manualGenCls.unfinished.connect(self._manualThread.quit)
+        self._manualGenCls.missingProduct.connect(self._manualThread.quit)
+
+        self._manualGenCls.finished.connect(self._manualGenCls.deleteLater)
+        self._manualGenCls.unfinished.connect(self._manualGenCls.deleteLater)
+        self._manualGenCls.missingProduct.connect(self._manualGenCls.deleteLater)
+
+        self._manualThread.finished.connect(self._manualThread.deleteLater)
+
+        # Start the thread
+        self._manualThread.start()
 
     def _genManual(self):
         initial_log = f'({helper_functions.get_user_name()}) clicked on ' \
@@ -81,7 +112,7 @@ class UiWindow(QMainWindow):
         self._uploader_cls.finished.connect(self._communicateSetSuccess)
         self._uploader_cls.unfinished.connect(self._communicateSetFailure)
         self._uploader_cls.finished.connect(self._setInitialState)
-        self._uploader_cls.finished.connect(self._setInitialState)
+        self._uploader_cls.unfinished.connect(self._setInitialState)
 
         # Clean up
         self._uploader_cls.finished.connect(self._thread.quit)
