@@ -28,10 +28,25 @@ class UiWindow(QMainWindow):
         self.centralWidget.setLayout(self.windowLayout)
         self.setCentralWidget(self.centralWidget)
 
+        self._setInitialState()
+
         self._connectSlotsSignals()
 
     def _connectSlotsSignals(self):
         self.closeButton.clicked.connect(self._closeButton)
+
+    def _setInitialState(self):
+        """ Set's initial state of the app by not allowing
+        user to click on some buttons until value is entered
+        for the number of rows. """
+        self.uploadSetsButton.setEnabled(False)
+        self.uploadManualButton.setEnabled(False)
+        self.generateManualButton.setEnabled(False)
+
+    def _uploadManual(self):
+        """ Reacts to user click on the 'Caricare Manuale button' """
+        self.progressBar.setValue(0)
+        pass
 
     def _closeButton(self):
         ask_user = helper_functions.ask_before_close(
