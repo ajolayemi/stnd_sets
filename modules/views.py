@@ -9,8 +9,8 @@ from PyQt5.QtWidgets import (QApplication, QLabel,
 from PyQt5.QtGui import QFont, QIntValidator
 
 # Self defined modules
-from modules import settings
-from helper_modules import helper_functions
+import settings
+from helper_modules import helper_functions, logger
 
 MSG_BOX_FONTS = QFont('Italics', 13)
 
@@ -33,9 +33,14 @@ class UiWindow(QMainWindow):
 
         self._connectSlotsSignals()
 
+        self.file_path = None
+
+        self.logger_cls = logger.Logger(file_name=settings.LOG_FILE_NAME)
+
     def _connectSlotsSignals(self):
         self.closeButton.clicked.connect(self._closeButton)
         self.rowNumber.textChanged.connect(self._updateInitialState)
+        self.uploadManualButton.clicked.connect(self._uploadManual)
 
     def _updateInitialState(self):
         """ Updates the app state when user has entered a value in the
@@ -55,7 +60,24 @@ class UiWindow(QMainWindow):
     def _uploadManual(self):
         """ Reacts to user click on the 'Caricare Manuale button' """
         self.progressBar.setValue(0)
-        pass
+        self.file_path = helper_functions.FileSelector().file_selector()
+        if self.file_path:
+            msg_to_log = f'User ({helper_functions.get_user_name()}) - selected ' \
+                         f'"{self.file_path}" \nas input file for manual upload.'
+            self.logger_cls.log_info_msg(msg_to_log)
+            helper_functions.output_communicator(
+                msg_box_font=MSG_BOX_FONTS,
+                button_pressed=self.uploadManualButton.text(),
+                output_type=True,
+                window_title=settings.WIN_TITLE
+            )
+
+        else:
+            helper_functions.no_file_selected_error(
+                msg_box_font=MSG_BOX_FONTS,
+                window_title=settings.WIN_TITLE,
+                button_pressed=self.uploadManualButton.text()
+            )
 
     def _closeButton(self):
         ask_user = helper_functions.ask_before_close(
