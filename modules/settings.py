@@ -29,3 +29,7 @@ COLUMNS_LIST = [COLUMN_1_TITLE, COLUMN_2_TITLE,
 
 LOG_FILE_NAME = 'stnd_sets_log.log'
 WIN_TITLE = 'STND_SETS'
+
+# Sheet indexes
+SET_SHEET = 0
+DATA_SHEET = 1
