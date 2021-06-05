@@ -2,7 +2,7 @@
 """" Holds various variables and constants used in this project. """
 from helper_modules import helper_functions, logger
 
-STRING = f'output {helper_functions.get_user_name()}'
+STRING = f'output {helper_functions.create_file_name()}'
 OUTPUT_FILE_NAME = f'{STRING}.xlsx'
 OUTPUT_SHEET_NAME = 'Output'
 
