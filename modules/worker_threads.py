@@ -72,10 +72,12 @@ class ManualGenerator(QObject):
     missingProduct = pyqtSignal(str)
 
     def __init__(self, manual_file_path: str,
-                 row_num: int):
+                 row_num: int, is_manual: bool, is_movement: bool):
         super(ManualGenerator, self).__init__()
         self._manual_file_path = manual_file_path
         self._row_num = int(row_num)
+        self._is_manual = is_manual
+        self._is_movement = is_movement
         self._found_missing_prod = False
 
     def manualGenerator(self):
@@ -129,12 +131,20 @@ class ManualGenerator(QObject):
                         totQta = float(
                             componentQta * float(setQtaOrdered)
                         )
-                        writer = excel_communicator.write_to_output_file(
-                            client_info=clientInfo, set_component=setComponent,
-                            set_ordered=setName, total_qta=totQta,
-                            worksheet=outputWorksheet, workbook=outputWorkbook,
-                            set_component_id=componentID, set_ordered_id=setID
-                        )
+                        if self._is_manual:
+                            writer = excel_communicator.write_to_output_file(
+                                client_info=clientInfo, set_component=setComponent,
+                                set_ordered=setName, total_qta=totQta,
+                                worksheet=outputWorksheet, workbook=outputWorkbook,
+                                set_component_id=componentID, set_ordered_id=setID
+                            )
+                        elif self._is_movement:
+                            writer = excel_communicator.write_to_output_file(
+                                client_info=clientInfo, set_component=setComponent,
+                                set_ordered=setName, total_qta=None,
+                                worksheet=outputWorksheet, workbook=outputWorkbook,
+                                set_component_id=componentID, set_ordered_id=setID
+                            )
                         if writer[0]:
                             continue
 
