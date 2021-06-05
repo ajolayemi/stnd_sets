@@ -17,14 +17,14 @@ ALPHA_UPPER = list(string.ascii_uppercase)
 
 
 def create_output_file(file_name=OUTPUT_FILE_NAME,
-                       sheet_name=OUTPUT_FILE_NAME) -> bool:
+                       sheet_name=OUTPUT_SHEET_NAME) -> bool:
     """ Creates an excel file that will serve as file where output
     data will be written. """
     output_workbook = openpyxl.Workbook()
     active_sheet = output_workbook.active
     active_sheet.title = sheet_name
     for index, col_name in enumerate(COLUMNS_LIST, 1):
-        active_sheet[f'{ALPHA_UPPER[index]}1'] = COLUMNS_LIST[index - 1]
+        active_sheet[f'{ALPHA_UPPER[index - 1]}1'] = COLUMNS_LIST[index - 1]
     output_workbook.save(filename=file_name)
     return os.path.exists(file_name)
 
