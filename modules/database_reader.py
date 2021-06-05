@@ -9,7 +9,7 @@ from collections import namedtuple
 # Self defined modules
 from settings import (DATABASE_NAME, TABLE_NAME,
                       READER_CON_NAME, DATABASE_DRIVER,
-                      LOG_FILE_NAME)
+                      LOG_FILE_NAME, LOGGER_CLS)
 from helper_modules import logger
 
 
@@ -23,8 +23,6 @@ class DatabaseReader:
         self.con_name = con_name
         self.table_name = table_name
 
-        self.logger_cls = logger.Logger(file_name=LOG_FILE_NAME)
-
         self.con_error = False
 
         self.reader_connection = None
@@ -35,12 +33,12 @@ class DatabaseReader:
         if delete_query.isActive():
             msg_to_log = f'{self.table_name} table in {self.db_name} was' \
                          f' successfully deleted.'
-            self.logger_cls.log_info_msg(msg_to_log)
+            LOGGER_CLS.log_info_msg(msg_to_log)
 
         else:
             msg_to_log = f'Attempt to delete {self.table_name} table in ' \
                          f'{self.db_name} failed.'
-            self.logger_cls.log_error_msg(msg_to_log)
+            LOGGER_CLS.log_error_msg(msg_to_log)
 
     def check_table(self):
         """ Checks to see if table is empty, returns True if it is empty
@@ -83,7 +81,7 @@ class DatabaseReader:
         else:
             components_query.finish()
             msg_to_log = f'Attempt to retrieve set components of ID: {set_id} failed'
-            self.logger_cls.log_error_msg(msg_to_log)
+            LOGGER_CLS.log_error_msg(msg_to_log)
             return {}
 
     def get_set_name(self, set_id):
@@ -122,12 +120,12 @@ class DatabaseReader:
             msg_to_log = f'There was an error while trying to ' \
                          f'connect to database with reader connection name \n' \
                          f'{self.con_name}.'
-            self.logger_cls.log_error_msg(msg_to_log)
+            LOGGER_CLS.log_error_msg(msg_to_log)
             self.con_error = True
         else:
             msg_to_log = f'Reader connection - {self.con_name} - in DatabaseReader class created' \
                          f' successfully.'
-            self.logger_cls.log_info_msg(msg=msg_to_log)
+            LOGGER_CLS.log_info_msg(msg=msg_to_log)
 
 
 if __name__ == '__main__':
