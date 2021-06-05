@@ -1,6 +1,6 @@
 
 """" Holds various variables and constants used in this project. """
-from helper_modules import helper_functions
+from helper_modules import helper_functions, logger
 
 STRING = f'output {helper_functions.get_user_name()}'
 OUTPUT_FILE_NAME = f'{STRING}.xlsx'
@@ -33,3 +33,5 @@ WIN_TITLE = 'STND_SETS'
 # Sheet indexes
 SET_SHEET = 0
 DATA_SHEET = 1
+
+LOGGER_CLS = logger.Logger(file_name=settings.LOG_FILE_NAME)

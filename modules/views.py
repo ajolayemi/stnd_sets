@@ -39,7 +39,7 @@ class UiWindow(QMainWindow):
         self.manual_file_path = None
         self.set_file_path = None
 
-        self.logger_cls = logger.Logger(file_name=settings.LOG_FILE_NAME)
+        self.count = 1
 
     def _connectSlotsSignals(self):
         self.closeButton.clicked.connect(self._closeButton)
@@ -48,7 +48,6 @@ class UiWindow(QMainWindow):
         self.uploadSetsButton.clicked.connect(self._uploadSets)
 
     def _setThreadManager(self, set_file_path, total_row):
-        print('Here!')
         self._thread = QThread()
         self._uploader_cls = SetUploader(
             file_path=set_file_path,
@@ -126,7 +125,7 @@ class UiWindow(QMainWindow):
         if self.manual_file_path:
             msg_to_log = f'User ({helper_functions.get_user_name()}) - selected ' \
                          f'"{self.manual_file_path}" \nas input file for manual upload.'
-            self.logger_cls.log_info_msg(msg_to_log)
+            settings.LOGGER_CLS.log_info_msg(msg_to_log)
             self._updateInitialState()
             helper_functions.output_communicator(
                 msg_box_font=MSG_BOX_FONTS,
