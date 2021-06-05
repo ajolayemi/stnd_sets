@@ -45,10 +45,14 @@ class UiWindow(QMainWindow):
     def _updateInitialState(self):
         """ Updates the app state when user has entered a value in the
         rowNumber widget. """
-        if self.rowNumber.text():
+        if self.rowNumber.text() and self.file_path:
+            self.uploadSetsButton.setEnabled(True)
+            self.generateManualButton.setEnabled(True)
+        elif self.rowNumber.text() and not self.file_path:
             self.uploadSetsButton.setEnabled(True)
         else:
             self.uploadSetsButton.setEnabled(False)
+            self.generateManualButton.setEnabled(False)
 
     def _setInitialState(self):
         """ Set's initial state of the app by not allowing
@@ -65,6 +69,7 @@ class UiWindow(QMainWindow):
             msg_to_log = f'User ({helper_functions.get_user_name()}) - selected ' \
                          f'"{self.file_path}" \nas input file for manual upload.'
             self.logger_cls.log_info_msg(msg_to_log)
+            self._updateInitialState()
             helper_functions.output_communicator(
                 msg_box_font=MSG_BOX_FONTS,
                 button_pressed=self.uploadManualButton.text(),
