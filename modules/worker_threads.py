@@ -9,6 +9,7 @@ from database_writer import DatabaseWriter
 from database_reader import DatabaseReader
 from helper_modules import helper_functions, logger
 import settings
+import os
 MSG_BOX_FONTS = QFont('Italics', 13)
 
 
@@ -113,7 +114,7 @@ class ManualGenerator(QObject):
                 self.progress.emit(currentProgress)
                 # Check to see if product is in database
                 setInDb = dbReader.get_set_name(set_id=setID)
-                if not setInDb[1]:
+                if not setInDb[0]:
                     msg_to_log = f"Program terminated because the set with ID " \
                                  f"{setID} isn't in DB. "
                     msg_to_emit = f'Il programma si è terminato prima perché il SET con ID ' \
@@ -121,6 +122,7 @@ class ManualGenerator(QObject):
                     settings.LOGGER_CLS.log_error_msg(msg_to_log)
                     self.missingProduct.emit(msg_to_emit)
                     self._found_missing_prod = True
+                    os.remove(settings.OUTPUT_FILE_NAME)
                     break
 
                 else:
