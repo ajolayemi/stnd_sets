@@ -69,7 +69,8 @@ class UiWindow(QMainWindow):
             if ask_user == QMessageBox.Yes:
                 DatabaseReader().drop_table()
         else:
-            self._setThreadManager(set_file_path=self.set_file_path, total_row=self.rowNumber.text())
+            self._setThreadManager(set_file_path=self.set_file_path,
+                                   total_row=self.rowNumber.text())
 
     def _updateInitialState(self):
         """ Updates the app state when user has entered a value in the
