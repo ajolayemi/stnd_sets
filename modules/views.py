@@ -12,6 +12,7 @@ from PyQt5.QtGui import QFont
 from modules import settings
 from helper_modules import helper_functions
 
+MSG_BOX_FONTS = QFont('Italics', 13)
 
 class UiWindow(QMainWindow):
     """ User interface window """
@@ -26,6 +27,19 @@ class UiWindow(QMainWindow):
         self._addWidgets()
         self.centralWidget.setLayout(self.windowLayout)
         self.setCentralWidget(self.centralWidget)
+
+        self._connectSlotsSignals()
+
+    def _connectSlotsSignals(self):
+        self.closeButton.clicked.connect(self._closeButton)
+
+    def _closeButton(self):
+        ask_user = helper_functions.ask_before_close(
+            msg_box_font=MSG_BOX_FONTS,
+            window_tile=settings.WIN_TITLE
+        )
+        if ask_user == QMessageBox.Yes:
+            self.close()
 
     def getComboItem(self):
         return self.choiceCombo.currentText()
