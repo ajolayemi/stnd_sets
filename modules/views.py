@@ -35,13 +35,21 @@ class UiWindow(QMainWindow):
 
     def _connectSlotsSignals(self):
         self.closeButton.clicked.connect(self._closeButton)
+        self.rowNumber.textChanged.connect(self._updateInitialState)
+
+    def _updateInitialState(self):
+        """ Updates the app state when user has entered a value in the
+        rowNumber widget. """
+        if self.rowNumber.text():
+            self.uploadSetsButton.setEnabled(True)
+        else:
+            self.uploadSetsButton.setEnabled(False)
 
     def _setInitialState(self):
         """ Set's initial state of the app by not allowing
         user to click on some buttons until value is entered
         for the number of rows. """
         self.uploadSetsButton.setEnabled(False)
-        self.uploadManualButton.setEnabled(False)
         self.generateManualButton.setEnabled(False)
 
     def _uploadManual(self):
