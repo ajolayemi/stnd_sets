@@ -50,7 +50,8 @@ class UiWindow(QMainWindow):
                          is_manual: bool = False, is_movement: bool = False):
         self._manualThread = QThread()
         self._manualGenCls = ManualGenerator(
-            manual_file_path=file_path, row_num=row_num
+            manual_file_path=file_path, row_num=row_num,
+            is_manual=is_manual, is_movement=is_movement
         )
 
         # Move it to a new thread
