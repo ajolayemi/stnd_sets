@@ -61,3 +61,20 @@ class SetUploader(QObject):
             self.logger_cls.log_error_msg(table_writer[1])
             settings.LOGGER_CLS.close()
             self.unfinished.emit()
+
+
+class ManualGenerator(QObject):
+    # Custom signals
+    progress = pyqtSignal(int)
+    finished = pyqtSignal()
+    unfinished = pyqtSignal()
+
+    def __init__(self, manual_file_path: str,
+                 row_num: int):
+        super(ManualGenerator, self).__init__()
+        self._manual_file_path = manual_file_path
+        self._row_num = row_num
+
+    def _manualGenerator(self):
+        """ Generate manual. """
+        pass
