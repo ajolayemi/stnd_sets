@@ -33,7 +33,8 @@ class UiWindow(QMainWindow):
 
         self._connectSlotsSignals()
 
-        self.file_path = None
+        self.manual_file_path = None
+        self.set_file_path = None
 
         self.logger_cls = logger.Logger(file_name=settings.LOG_FILE_NAME)
 
@@ -45,10 +46,10 @@ class UiWindow(QMainWindow):
     def _updateInitialState(self):
         """ Updates the app state when user has entered a value in the
         rowNumber widget. """
-        if self.rowNumber.text() and self.file_path:
+        if self.rowNumber.text() and self.manual_file_path:
             self.uploadSetsButton.setEnabled(True)
             self.generateManualButton.setEnabled(True)
-        elif self.rowNumber.text() and not self.file_path:
+        elif self.rowNumber.text() and not self.manual_file_path:
             self.uploadSetsButton.setEnabled(True)
         else:
             self.uploadSetsButton.setEnabled(False)
@@ -64,10 +65,10 @@ class UiWindow(QMainWindow):
     def _uploadManual(self):
         """ Reacts to user click on the 'Caricare Manuale button' """
         self.progressBar.setValue(0)
-        self.file_path = helper_functions.FileSelector().file_selector()
-        if self.file_path:
+        self.manual_file_path = helper_functions.FileSelector().file_selector()
+        if self.manual_file_path:
             msg_to_log = f'User ({helper_functions.get_user_name()}) - selected ' \
-                         f'"{self.file_path}" \nas input file for manual upload.'
+                         f'"{self.manual_file_path}" \nas input file for manual upload.'
             self.logger_cls.log_info_msg(msg_to_log)
             self._updateInitialState()
             helper_functions.output_communicator(
