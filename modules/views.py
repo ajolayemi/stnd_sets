@@ -27,6 +27,9 @@ class UiWindow(QMainWindow):
         self.centralWidget.setLayout(self.windowLayout)
         self.setCentralWidget(self.centralWidget)
 
+    def getComboItem(self):
+        return self.choiceCombo.currentText()
+
     def _addWidgets(self):
         username = helper_functions.get_user_name()
         self.greetingsLabel = QLabel(f'<h1>Ciao {username}')
