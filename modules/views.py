@@ -39,13 +39,32 @@ class UiWindow(QMainWindow):
         self.manual_file_path = None
         self.set_file_path = None
 
-        self.count = 1
-
     def _connectSlotsSignals(self):
         self.closeButton.clicked.connect(self._closeButton)
         self.rowNumber.textChanged.connect(self._updateInitialState)
         self.uploadManualButton.clicked.connect(self._uploadManual)
         self.uploadSetsButton.clicked.connect(self._uploadSets)
+        self.generateManualButton.clicked.connect(self._genManual)
+
+    def _manualGenThread(self, file_path, row_num):
+        pass
+
+    def _genManual(self):
+        initial_log = f'({helper_functions.get_user_name()}) clicked on ' \
+                     f'{self.generateManualButton.text()}'
+        settings.LOGGER_CLS.log_info_msg(initial_log)
+        check_table = DatabaseReader()
+        check_table.create_reader_con()
+        if not check_table.table_is_empty():
+            self._manualGenThread(self.manual_file_path,
+                                  self.rowNumber.text())
+        else:
+            msg = 'Mi risulta che il database prodotti è vuoto'
+            helper_functions.no_file_selected_error(
+                msg_box_font=MSG_BOX_FONTS,
+                custom_msg=msg,
+                window_title=settings.WIN_TITLE
+            )
 
     def _setThreadManager(self, set_file_path, total_row):
         self._thread = QThread()
@@ -86,7 +105,7 @@ class UiWindow(QMainWindow):
         db_reader_cls = DatabaseReader()
         db_reader_cls.create_reader_con()
         # Check to see that database is empty, if it isn't
-        if not db_reader_cls.check_table():
+        if not db_reader_cls.table_is_empty():
             ask_user = helper_functions.ask_for_overwrite(
                 msg_box_font=MSG_BOX_FONTS,
                 window_tile=settings.WIN_TITLE

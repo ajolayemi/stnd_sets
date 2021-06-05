@@ -40,7 +40,7 @@ class DatabaseReader:
                          f'{self.db_name} failed.'
             LOGGER_CLS.log_error_msg(msg_to_log)
 
-    def check_table(self):
+    def table_is_empty(self):
         """ Checks to see if table is empty, returns True if it is empty
         False otherwise. """
         check_query = QSqlQuery(self.reader_connection)
