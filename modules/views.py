@@ -7,11 +7,13 @@ from PyQt5.QtWidgets import (QApplication, QLabel,
                              QMessageBox, QComboBox,
                              QProgressBar, QLineEdit,)
 from PyQt5.QtGui import QFont, QIntValidator
+from PyQt5.QtCore import QThread
 
 # Self defined modules
 import settings
 from helper_modules import helper_functions, logger
 from database_reader import DatabaseReader
+from worker_threads import SetUploader
 
 MSG_BOX_FONTS = QFont('Italics', 13)
 
@@ -46,27 +48,54 @@ class UiWindow(QMainWindow):
         self.uploadSetsButton.clicked.connect(self._uploadSets)
 
     def _setThreadManager(self, set_file_path, total_row):
-        pass
+        print('Here!')
+        self._thread = QThread()
+        self._uploader_cls = SetUploader(
+            file_path=set_file_path,
+            row_num=total_row
+        )
+        # Move this process to a separate thread
+        self._uploader_cls.moveToThread(self._thread)
+
+        # Connect thread start to the method that upload sets
+        self._thread.started.connect(self._uploader_cls.setUploader)
+
+        # Update states
+        self._uploader_cls.progress.connect(self.progressBar.setValue)
+
+        # Clean up
+        self._uploader_cls.finished.connect(self._thread.quit)
+        self._uploader_cls.unfinished.connect(self._thread.quit)
+        self._uploader_cls.finished.connect(self._uploader_cls.deleteLater)
+        self._uploader_cls.unfinished.connect(self._uploader_cls.deleteLater)
+        self._thread.finished.connect(self._thread.deleteLater)
+
+        # Run the thread
+        self._thread.start()
 
     def _uploadSets(self):
         """ Logic behind set upload. It populates the product database
         used in this project. """
         self.progressBar.setValue(0)
-        self.set_file_path = helper_functions.FileSelector().file_selector()
+        db_reader_cls = DatabaseReader()
+        db_reader_cls.create_reader_con()
+        # Check to see that database is empty, if it isn't
+        if not db_reader_cls.check_table():
+            ask_user = helper_functions.ask_for_overwrite(
+                msg_box_font=MSG_BOX_FONTS,
+                window_tile=settings.WIN_TITLE
+            )
+            if ask_user == QMessageBox.Yes:
+                db_reader_cls.drop_table()
+                self.set_file_path = helper_functions.FileSelector().file_selector()
+        else:
+            self.set_file_path = helper_functions.FileSelector().file_selector()
         if not self.set_file_path:
             helper_functions.no_file_selected_error(
                 button_pressed=self.uploadSetsButton.text(),
                 msg_box_font=MSG_BOX_FONTS,
                 window_title=settings.WIN_TITLE
             )
-        # Check to see that database is empty, if it isn't
-        elif not DatabaseReader().check_table():
-            ask_user = helper_functions.ask_for_overwrite(
-                msg_box_font=MSG_BOX_FONTS,
-                window_tile=settings.WIN_TITLE
-            )
-            if ask_user == QMessageBox.Yes:
-                DatabaseReader().drop_table()
         else:
             self._setThreadManager(set_file_path=self.set_file_path,
                                    total_row=self.rowNumber.text())

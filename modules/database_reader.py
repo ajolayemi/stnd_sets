@@ -27,7 +27,7 @@ class DatabaseReader:
 
         self.con_error = False
 
-        self._create_con()
+        self.reader_connection = None
 
     def drop_table(self):
         delete_query = QSqlQuery(self.reader_connection)
@@ -113,7 +113,7 @@ class DatabaseReader:
     def _get_con_name(self):
         return self.reader_connection.connectionName()
 
-    def _create_con(self):
+    def create_reader_con(self):
         self.reader_connection = QSqlDatabase.addDatabase(
             self.db_driver, connectionName=self.con_name
         )

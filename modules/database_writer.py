@@ -25,7 +25,7 @@ class DatabaseWriter:
 
         self.con_error = False
 
-        self._create_con()
+        self.writer_connection = None
 
     def populate_table(self, set_id: int, set_name: str,
                        set_component: str, component_qta: int,
@@ -55,18 +55,15 @@ class DatabaseWriter:
             if insert_data_query.isActive():
                 msg_to_log = f'Data insertion into {self.table_name} in ' \
                              f'{self.db_name} was successful.'
-                self.logger_cls.log_info_msg(msg_to_log)
-                return True
+                return True, msg_to_log
             else:
                 msg_to_log = f'Data insertion into {self.table_name} in ' \
                              f'{self.db_name} was not successful.'
-                self.logger_cls.log_error_msg(msg_to_log)
-                return False
+                return False, msg_to_log
         else:
             msg_to_log = f'Error while trying to prepare data to be inserted into {self.table_name}' \
                          f' in {self.db_name}'
-            self.logger_cls.log_error_msg(msg_to_log)
-            return False
+            return False, msg_to_log
 
     def create_table(self):
         table_query_cls = QSqlQuery(self.writer_connection)
@@ -97,7 +94,7 @@ class DatabaseWriter:
     def _get_db_name(self):
         return self.writer_connection.databaseName()
 
-    def _create_con(self):
+    def create_con(self):
         """ Creates database connection """
         self.writer_connection = QSqlDatabase.addDatabase(
             self.db_driver, connectionName=self.con_name
