@@ -42,9 +42,18 @@ class UiWindow(QMainWindow):
     def _connectSlotsSignals(self):
         self.closeButton.clicked.connect(self._closeButton)
         self.rowNumber.textChanged.connect(self._updateInitialState)
+        self.choiceCombo.currentIndexChanged.connect(self._updateWhenComboChange)
         self.uploadManualButton.clicked.connect(self._uploadManual)
         self.uploadSetsButton.clicked.connect(self._uploadSets)
         self.generateManualButton.clicked.connect(self._genManual)
+
+    def _updateWhenComboChange(self):
+        """ Updates the text of generateManualButton each time user
+        select new value in the combo list. """
+        if self.choiceCombo.currentIndex() == 0:
+            self.generateManualButton.setText('Generare Manuale')
+        else:
+            self.generateManualButton.setText('Generare Movimenti')
 
     def _manualGenThread(self, file_path, row_num,
                          is_manual: bool = False, is_movement: bool = False):
