@@ -5,7 +5,7 @@
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 from settings import (DATABASE_NAME, TABLE_NAME,
                       CONNECTION_NAME, DATABASE_DRIVER,
-                      LOG_FILE_NAME,
+                      LOG_FILE_NAME, LOGGER_CLS
                       )
 
 # helper_modules is a self defined module
@@ -21,7 +21,6 @@ class DatabaseWriter:
         self.db_name = db_name
         self.con_name = con_name
         self.table_name = table_name
-        self.logger_cls = logger.Logger(file_name=LOG_FILE_NAME)
 
         self.con_error = False
 
@@ -82,11 +81,11 @@ class DatabaseWriter:
         if table_query_cls.isActive():
             msg_to_log = f'{self.table_name} table was created successfully in ' \
                          f'{self._get_db_name()}'
-            self.logger_cls.log_info_msg(msg_to_log)
+            LOGGER_CLS.log_info_msg(msg_to_log)
         else:
             msg_to_log = f'There was an error while trying to create {self.table_name} table in ' \
                          f'{self._get_db_name()}'
-            self.logger_cls.log_error_msg(msg_to_log)
+            LOGGER_CLSlog_error_msg(msg_to_log)
 
     def _get_con_name(self):
         return self.writer_connection.connectionName()
@@ -105,11 +104,11 @@ class DatabaseWriter:
             msg_to_log = f'There was an error while trying to ' \
                          f'connect to database with writer connection name \n' \
                          f'{self.con_name}'
-            self.logger_cls.log_error_msg(msg_to_log)
+            LOGGER_CLS.log_error_msg(msg_to_log)
         else:
             msg_to_log = f'Writer connection - {self.con_name} - in DatabaseReader class created' \
                          f' successfully.'
-            self.logger_cls.log_info_msg(msg=msg_to_log)
+            LOGGER_CLS.log_info_msg(msg=msg_to_log)
 
 
 if __name__ == '__main__':
