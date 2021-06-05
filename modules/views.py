@@ -77,6 +77,10 @@ class UiWindow(QMainWindow):
         self._manualGenCls.unfinished.connect(self._setInitialState)
         self._manualGenCls.missingProduct.connect(self._setInitialState)
 
+        self._manualGenCls.finished.connect(self._communicateManualSuccess)
+        self._manualGenCls.unfinished.connect(self._communicateManualFailure)
+        self._manualGenCls.missingProduct.connect(self._communicateManualFailure)
+
         # Clean up
         self._manualGenCls.finished.connect(self._manualThread.quit)
         self._manualGenCls.unfinished.connect(self._manualThread.quit)
@@ -90,6 +94,23 @@ class UiWindow(QMainWindow):
 
         # Start the thread
         self._manualThread.start()
+
+    def _communicateManualSuccess(self):
+        helper_functions.output_communicator(
+            msg_box_font=MSG_BOX_FONTS,
+            button_pressed=self.generateManualButton.text(),
+            window_title=settings.WIN_TITLE,
+            output_type=True
+        )
+
+    def _communicateManualFailure(self, msg):
+        helper_functions.output_communicator(
+            msg_box_font=MSG_BOX_FONTS,
+            window_title=settings.WIN_TITLE,
+            button_pressed=self.generateManualButton.text(),
+            output_type=False,
+            custom_msg=msg
+        )
 
     def _genManual(self):
         initial_log = f'({helper_functions.get_user_name()}) clicked on ' \
