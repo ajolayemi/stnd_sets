@@ -61,6 +61,7 @@ class UiWindow(QMainWindow):
         self._uploader_cls.finished.connect(self._communicateSetSuccess)
         self._uploader_cls.unfinished.connect(self._communicateSetFailure)
 
+
         # Clean up
         self._uploader_cls.finished.connect(self._thread.quit)
         self._uploader_cls.unfinished.connect(self._thread.quit)
@@ -129,6 +130,7 @@ class UiWindow(QMainWindow):
         """ Set's initial state of the app by not allowing
         user to click on some buttons until value is entered
         for the number of rows. """
+        self.rowNumber.clear()
         self.progressBar.setValue(0)
         self.uploadSetsButton.setEnabled(False)
         self.generateManualButton.setEnabled(False)
