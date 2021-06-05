@@ -77,6 +77,11 @@ class UiWindow(QMainWindow):
     def _uploadSets(self):
         """ Logic behind set upload. It populates the product database
         used in this project. """
+        # Log user click
+        msg_to_log = f'({helper_functions.get_user_name()}) clicked on ' \
+                     f'{self.uploadSetsButton.text()}'
+        settings.LOGGER_CLS.log_info_msg(msg_to_log)
+
         self.progressBar.setValue(0)
         db_reader_cls = DatabaseReader()
         db_reader_cls.create_reader_con()
