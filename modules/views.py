@@ -5,14 +5,15 @@ from PyQt5.QtWidgets import (QApplication, QLabel,
                              QFileDialog, QVBoxLayout,
                              QMainWindow, QPushButton,
                              QMessageBox, QComboBox,
-                             QProgressBar, QLineEdit)
-from PyQt5.QtGui import QFont
+                             QProgressBar, QLineEdit,)
+from PyQt5.QtGui import QFont, QIntValidator
 
 # Self defined modules
 from modules import settings
 from helper_modules import helper_functions
 
 MSG_BOX_FONTS = QFont('Italics', 13)
+
 
 class UiWindow(QMainWindow):
     """ User interface window """
@@ -76,6 +77,14 @@ class UiWindow(QMainWindow):
         self.choiceComboLabel = QLabel('Per ')
         self.choiceComboLabel.setFont(QFont('Italics', 13))
 
+        self.rowNumberLabel = QLabel('N°: ')
+        self.rowNumberLabel.setFont(QFont('Italics', 13))
+
+        self.rowNumber = QLineEdit()
+        self.rowNumber.setPlaceholderText('Inserire n° righe...')
+        self.rowNumber.setValidator(QIntValidator())
+        self.rowNumber.setFont(QFont('Italics', 13))
+
         self.uploadSetsButton = QPushButton('Caricare STND_SETS')
         self.uploadSetsButton.setFont(self.fonts)
         self.uploadSetsButton.setStyleSheet('color: blue')
@@ -97,7 +106,7 @@ class UiWindow(QMainWindow):
         self.formLayout = QFormLayout()
 
         self.formLayout.addRow(self.choiceComboLabel, self.choiceCombo)
-
+        self.formLayout.addRow(self.rowNumberLabel, self.rowNumber)
         for button in buttonsList:
             self.formLayout.addRow(self.buttonsLabel, button)
 
