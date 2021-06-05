@@ -74,8 +74,9 @@ class DatabaseReader:
                     components_query.record().indexOf('ComponentQta'))
                 component_netto_qta = components_query.value(
                     components_query.record().indexOf('ComponentQtaNetto'))
-                components_det[component] = DetTuple(component_id, component_qta,
-                                                     component_netto_qta)
+                if not any((component_id == '', component_qta == '', component_netto_qta == '')):
+                    components_det[component] = DetTuple(component_id, component_qta,
+                                                         component_netto_qta)
             components_query.finish()
             return components_det
         else:
