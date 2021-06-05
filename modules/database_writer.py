@@ -30,7 +30,7 @@ class DatabaseWriter:
     def populate_table(self, set_id: int, set_name: str,
                        set_component: str, component_qta: int,
                        component_netto_qta: int, component_id: int,
-                       set_code: str):
+                       set_code: str) -> bool:
         insert_data_query = QSqlQuery(self.writer_connection)
         query = (
             f""" INSERT INTO {self.table_name} (
@@ -56,14 +56,17 @@ class DatabaseWriter:
                 msg_to_log = f'Data insertion into {self.table_name} in ' \
                              f'{self.db_name} was successful.'
                 self.logger_cls.log_info_msg(msg_to_log)
+                return True
             else:
                 msg_to_log = f'Data insertion into {self.table_name} in ' \
                              f'{self.db_name} was not successful.'
                 self.logger_cls.log_error_msg(msg_to_log)
+                return False
         else:
             msg_to_log = f'Error while trying to prepare data to be inserted into {self.table_name}' \
                          f' in {self.db_name}'
             self.logger_cls.log_error_msg(msg_to_log)
+            return False
 
     def create_table(self):
         table_query_cls = QSqlQuery(self.writer_connection)
