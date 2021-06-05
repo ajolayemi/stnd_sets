@@ -129,6 +129,7 @@ class UiWindow(QMainWindow):
         """ Set's initial state of the app by not allowing
         user to click on some buttons until value is entered
         for the number of rows. """
+        self.progressBar.setValue(0)
         self.uploadSetsButton.setEnabled(False)
         self.generateManualButton.setEnabled(False)
 
