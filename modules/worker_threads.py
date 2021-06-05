@@ -1,12 +1,14 @@
 """ Contains various worker threads used in this project. """
 
 from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtGui import QFont
 
 # Self defined modules
 import excel_communicator
 from database_writer import DatabaseWriter
 from helper_modules import helper_functions, logger
 import settings
+MSG_BOX_FONTS = QFont('Italics', 13)
 
 
 class SetUploader(QObject):
@@ -51,14 +53,11 @@ class SetUploader(QObject):
                 component_net_qta, component_id, set_code
             )
 
-        self.progress.emit(0)
         if table_writer[0]:
-            self.logger_cls.log_info_msg(table_writer[1])
+            settings.LOGGER_CLS.log_info_msg(table_writer[1])
+            settings.LOGGER_CLS.close()
             self.finished.emit()
-            self.logger_cls.close()
         else:
             self.logger_cls.log_error_msg(table_writer[1])
+            settings.LOGGER_CLS.close()
             self.unfinished.emit()
-            self.logger_cls.close()
-
-

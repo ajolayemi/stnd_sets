@@ -34,4 +34,4 @@ WIN_TITLE = 'STND_SETS'
 SET_SHEET = 0
 DATA_SHEET = 1
 
-LOGGER_CLS = logger.Logger(file_name=settings.LOG_FILE_NAME)
+LOGGER_CLS = logger.Logger(file_name=LOG_FILE_NAME)

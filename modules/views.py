@@ -49,10 +49,7 @@ class UiWindow(QMainWindow):
 
     def _setThreadManager(self, set_file_path, total_row):
         self._thread = QThread()
-        self._uploader_cls = SetUploader(
-            file_path=set_file_path,
-            row_num=total_row
-        )
+        self._uploader_cls = SetUploader(file_path=set_file_path, row_num=total_row)
         # Move this process to a separate thread
         self._uploader_cls.moveToThread(self._thread)
 
@@ -61,6 +58,8 @@ class UiWindow(QMainWindow):
 
         # Update states
         self._uploader_cls.progress.connect(self.progressBar.setValue)
+        self._uploader_cls.finished.connect(self._communicateSetSuccess)
+        self._uploader_cls.unfinished.connect(self._communicateSetFailure)
 
         # Clean up
         self._uploader_cls.finished.connect(self._thread.quit)
@@ -96,8 +95,23 @@ class UiWindow(QMainWindow):
                 window_title=settings.WIN_TITLE
             )
         else:
-            self._setThreadManager(set_file_path=self.set_file_path,
-                                   total_row=self.rowNumber.text())
+            self._setThreadManager(set_file_path=self.set_file_path, total_row=self.rowNumber.text())
+
+    def _communicateSetSuccess(self):
+        helper_functions.output_communicator(
+            msg_box_font=MSG_BOX_FONTS,
+            output_type=True,
+            button_pressed=self.uploadSetsButton.text(),
+            window_title=settings.WIN_TITLE
+        )
+
+    def _communicateSetFailure(self):
+        helper_functions.output_communicator(
+            msg_box_font=MSG_BOX_FONTS,
+            output_type=False,
+            button_pressed=self.uploadSetsButton.text(),
+            window_title=settings.WIN_TITLE
+        )
 
     def _updateInitialState(self):
         """ Updates the app state when user has entered a value in the
