@@ -58,9 +58,11 @@ class UiWindow(QMainWindow):
 
         # Update states
         self._uploader_cls.progress.connect(self.progressBar.setValue)
+        self._uploader_cls.progress.connect(self._updateStateWhileBusy)
         self._uploader_cls.finished.connect(self._communicateSetSuccess)
         self._uploader_cls.unfinished.connect(self._communicateSetFailure)
-
+        self._uploader_cls.finished.connect(self._setInitialState)
+        self._uploader_cls.finished.connect(self._setInitialState)
 
         # Clean up
         self._uploader_cls.finished.connect(self._thread.quit)
@@ -98,6 +100,13 @@ class UiWindow(QMainWindow):
         else:
             self._setThreadManager(set_file_path=self.set_file_path, total_row=self.rowNumber.text())
 
+    def _updateStateWhileBusy(self):
+        """ Updates the app's state when it is busy doing something else. """
+        self.uploadSetsButton.setEnabled(False)
+        self.uploadManualButton.setEnabled(False)
+        self.generateManualButton.setEnabled(False)
+        self.closeButton.setEnabled(False)
+
     def _communicateSetSuccess(self):
         helper_functions.output_communicator(
             msg_box_font=MSG_BOX_FONTS,
@@ -134,6 +143,8 @@ class UiWindow(QMainWindow):
         self.progressBar.setValue(0)
         self.uploadSetsButton.setEnabled(False)
         self.generateManualButton.setEnabled(False)
+        self.uploadManualButton.setEnabled(True)
+        self.closeButton.setEnabled(True)
 
     def _uploadManual(self):
         """ Reacts to user click on the 'Caricare Manuale button' """
