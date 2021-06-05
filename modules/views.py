@@ -46,7 +46,8 @@ class UiWindow(QMainWindow):
         self.uploadSetsButton.clicked.connect(self._uploadSets)
         self.generateManualButton.clicked.connect(self._genManual)
 
-    def _manualGenThread(self, file_path, row_num):
+    def _manualGenThread(self, file_path, row_num,
+                         is_manual: bool = False, is_movement: bool = False):
         self._manualThread = QThread()
         self._manualGenCls = ManualGenerator(
             manual_file_path=file_path, row_num=row_num
@@ -87,8 +88,12 @@ class UiWindow(QMainWindow):
         check_table = DatabaseReader()
         check_table.create_reader_con()
         if not check_table.table_is_empty():
-            self._manualGenThread(self.manual_file_path,
-                                  self.rowNumber.text())
+            if self.choiceCombo.currentIndex() == 0:
+                self._manualGenThread(self.manual_file_path, self.rowNumber.text(),
+                                      is_manual=True)
+            else:
+                self._manualGenThread(self.manual_file_path, self.rowNumber.text(),
+                                      is_movement=True)
         else:
             msg = 'Mi risulta che il database prodotti è vuoto'
             helper_functions.no_file_selected_error(
