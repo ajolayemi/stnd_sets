@@ -68,7 +68,7 @@ class ManualGenerator(QObject):
     # Custom signals
     progress = pyqtSignal(int)
     finished = pyqtSignal()
-    unfinished = pyqtSignal()
+    unfinished = pyqtSignal(str)
     missingProduct = pyqtSignal(str)
 
     def __init__(self, manual_file_path: str,
@@ -125,7 +125,7 @@ class ManualGenerator(QObject):
                     # Get set details
                     setDetails = dbReader.get_set_components_det(set_id=setID)
                     for setComponent in setDetails:
-                        componentID, componentQta, _ = setDetails[setComponent]
+                        componentID, componentQta, componentNetQta = setDetails[setComponent]
                         totQta = float(
                             componentQta * float(setQtaOrdered)
                         )
@@ -146,7 +146,8 @@ class ManualGenerator(QObject):
                 settings.LOGGER_CLS.log_info_msg(msg_to_log)
 
         else:
-            self.unfinished.emit()
+            msg_to_emit = "C'è stato un errore nel tentativo di aprire file output"
+            self.unfinished.emit(msg_to_emit)
             msg_to_log = f'Error while trying to load ' \
                          f'Output file in "{self._manual_file_path}" '
             settings.LOGGER_CLS.log_error_msg(msg_to_log)
