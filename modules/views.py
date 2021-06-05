@@ -45,8 +45,7 @@ class UiWindow(QMainWindow):
         self.uploadManualButton.clicked.connect(self._uploadManual)
         self.uploadSetsButton.clicked.connect(self._uploadSets)
 
-    def _setThreadManager(self, set_file_path,
-                          total_row):
+    def _setThreadManager(self, set_file_path, total_row):
         pass
 
     def _uploadSets(self):
