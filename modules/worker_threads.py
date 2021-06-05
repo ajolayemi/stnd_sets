@@ -130,10 +130,10 @@ class ManualGenerator(QObject):
                     setDetails = dbReader.get_set_components_det(set_id=setID)
                     for setComponent in setDetails:
                         componentID, componentQta, componentNetQta = setDetails[setComponent]
-                        totQta = float(
-                            componentQta * float(setQtaOrdered)
-                        )
                         if self._is_manual:
+                            totQta = float(
+                                componentQta * float(setQtaOrdered)
+                            )
                             writer = excel_communicator.write_to_output_file(
                                 client_info=clientInfo, set_component=setComponent,
                                 set_ordered=setName, total_qta=totQta,
