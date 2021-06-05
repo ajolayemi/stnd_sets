@@ -20,15 +20,13 @@ class SetUploader(QObject):
         self._file_path = file_path
         self._row_num = int(row_num)
 
-        self.logger_cls = logger.Logger(file_name=settings.LOG_FILE_NAME)
-
     def setUploader(self):
         data_worksheet = excel_communicator.load_worksheet_by_index(
             self._file_path, settings.SET_SHEET
         )
         worksheet_log = f'Worksheet ({data_worksheet}) at index {settings.SET_SHEET} in {self._file_path}' \
                         f'\nloaded successfully'
-        self.logger_cls.log_info_msg(worksheet_log)
+        settings.LOGGER_CLS.log_info_msg(worksheet_log)
         db_cls = DatabaseWriter()
         db_cls.create_con()
         db_cls.create_table()
