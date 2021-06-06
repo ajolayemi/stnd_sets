@@ -116,9 +116,9 @@ class ManualGenerator(QObject):
                 setInDb = dbReader.get_set_name(set_id=setID)
                 if not setInDb[0]:
                     msg_to_log = f"Program terminated because the set with ID " \
-                                 f"{setID} isn't in DB. "
+                                 f"{setID} -- {setName} isn't in DB. "
                     msg_to_emit = f'Il programma si è terminato prima perché il SET con ID ' \
-                                  f' {setID} non è in database'
+                                  f' {setID} -- {setName} non è in database'
                     settings.LOGGER_CLS.log_error_msg(msg_to_log)
                     self.missingProduct.emit(msg_to_emit)
                     self._found_missing_prod = True
