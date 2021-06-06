@@ -273,7 +273,7 @@ class UiWindow(QMainWindow):
 
     def _addWidgets(self):
         username = helper_functions.get_user_name()
-        self.greetingsLabel = QLabel(f'<h1>Ciao {username}')
+        self.greetingsLabel = QLabel(f'<h1>Ciao {username}.</h1>')
         self.windowLayout.addWidget(self.greetingsLabel)
 
         self.buttonsLabel = '<b>---></b>'
